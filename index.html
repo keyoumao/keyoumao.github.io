@@ -255,15 +255,31 @@
         </div>
     </div>
 
-</section>
-<!-- Podcast -->
-
-    <div id="myVideo">
-        <iframe width="560" height="315" src="https://www.youtube.com/embed/_1f-o0nqpEI" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<!-- Podcast Section -->
+<section>
+    <div id="myVideo" class="video-container">
+        <iframe src="https://www.youtube.com/embed/_1f-o0nqpEI" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
     </div>
-
-
 </section>
+
+<!-- CSS for Responsive Video -->
+<style>
+    .video-container {
+        position: relative;
+        width: 100%;
+        max-width: 560px; /* Optional: Set a maximum width */
+        margin: 0 auto; /* Center the video horizontally */
+        padding-top: 56.25%; /* 16:9 Aspect Ratio */
+    }
+    .video-container iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    }
+</style>
+
     
     <!-- EDUCATION -->
     <section class="container education-container">
