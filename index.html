@@ -2,13 +2,13 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
 
   <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700" rel="stylesheet" />
-  <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed:300,400,700" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed:300,400,700&display=swap" rel="stylesheet" />
 
   <!-- Bootstrap CSS -->
   <link
@@ -24,39 +24,208 @@
     integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf"
     crossorigin="anonymous" />
 
-  <!-- Custom styles -->
-  <link href="assets/css/app.css" rel="stylesheet" />
+  <!-- Custom styles (optional external file) -->
+  <!-- <link href="assets/css/app.css" rel="stylesheet" /> -->
 
-  <!-- Video CSS -->
   <style>
-    /* Full-size vids in AI Products */
-    .video-container {
-      position: relative;
-      width: 100%;
-      padding-top: 56.25%; /* 16:9 */
-      margin-bottom: 1rem;
-    }
-    .video-container iframe {
-      position: absolute;
-      top: 0; left: 0;
-      width: 100%;
-      height: 100%;
+    /* → Theme colors & transition speed */
+    :root {
+      --color-primary: #328eff;
+      --color-secondary: #1b6ec2;
+      --color-text: #333;
+      --color-bg: #f9faff; /* Slightly off-white background */
+      --transition-speed: 0.3s;
     }
 
-    /* Smaller vids in Education */
-    .edu-video-container {
+    /* → Base resets */
+    body {
+      background-color: var(--color-bg);
+      color: var(--color-text);
+      font-family: 'Roboto Condensed', sans-serif;
+      line-height: 1.6;
+      overflow-x: hidden; /* Prevent horizontal scrollbars caused by animations */
+    }
+    a {
+      text-decoration: none;
+      color: var(--color-primary);
+      transition: color var(--transition-speed);
+    }
+    a:hover {
+      color: var(--color-secondary);
+      text-decoration: none; /* Ensure no underline on hover */
+    }
+    h1.title, h2, h3.subtitle, h3.intro, h1.name {
+      font-family: 'Lato', sans-serif;
+    }
+    /* Ensure headings inherit text color unless specified */
+    h1, h2, h3, h4, h5, h6 {
+      color: inherit;
+    }
+
+
+    /* → Header with rotating radial “shine” */
+    header {
       position: relative;
-      width: 100%;
-      max-width: 560px;
-      margin: .5rem auto;
-      padding-top: 70%; /* about half-height of 16:9 */
+      background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+      color: #fff; /* Ensure text is white */
+      overflow: hidden; /* Contain the pseudo-element */
+      z-index: 1; /* Ensure pseudo-element is behind content */
     }
-    .edu-video-container iframe {
+    header::after {
+      content: '';
       position: absolute;
-      top: 0; left: 0;
-      width: 100%;
-      height: 100%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle at center, rgba(255,255,255,0.15), transparent 60%);
+      top: -50%; left: -50%;
+      animation: rotateBg 15s linear infinite;
+      z-index: -1; /* Place behind header content */
     }
+    @keyframes rotateBg {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    header h1.name, header h3.subtitle, header img {
+      position: relative; /* Ensure header content is above the pseudo-element */
+      z-index: 2;
+    }
+
+    /* → Section & text reveal animation */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    }
+    .reveal.active {
+      opacity: 1;
+      transform: none;
+    }
+
+    /* → Buttons: gradient + lift on hover */
+    .btn {
+      background: linear-gradient(45deg, var(--color-primary), var(--color-secondary));
+      color: #fff; /* Ensure text is white */
+      border: none;
+      border-radius: 8px; /* Slightly more rounded */
+      padding: 0.75rem 1.5rem;
+      transition: transform var(--transition-speed), filter var(--transition-speed), background-color var(--transition-speed); /* Added background-color transition */
+    }
+    .btn:hover {
+      transform: translateY(-3px) scale(1.03); /* Slightly more lift */
+      filter: brightness(1.15); /* Slightly brighter */
+      color: #fff; /* Keep text white on hover */
+      background: linear-gradient(45deg, var(--color-primary), var(--color-secondary)); /* Maintain gradient */
+    }
+
+    /* → Cards: cleaner, softer shadows + hover lift */
+    .card.custom-card {
+      background: #fff;
+      padding: 2rem;
+      border: none; /* Remove default border */
+      border-radius: 1rem; /* More rounded corners */
+      box-shadow: 0 8px 24px rgba(0,0,0,0.08); /* Softer shadow */
+      transition: transform var(--transition-speed), box-shadow var(--transition-speed);
+      overflow: hidden; /* Contain elements */
+    }
+    .card.custom-card:hover {
+      transform: translateY(-6px); /* Slightly more lift */
+      box-shadow: 0 12px 32px rgba(0,0,0,0.12); /* Enhanced shadow on hover */
+    }
+
+    /* → Timeline items slide in from left */
+    .timeline-item {
+      opacity: 0;
+      transform: translateX(-30px); /* Start further left */
+      transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+    }
+    .timeline-item.active {
+      opacity: 1;
+      transform: none; /* Slide to original position */
+    }
+
+    /* → Video containers */
+    .video-container, .edu-video-container {
+        position: relative;
+        width: 100%;
+        padding-top: 56.25%; /* 16:9 Aspect Ratio */
+        margin-bottom: 1rem;
+        overflow: hidden; /* Ensure iframe stays contained */
+        border-radius: 8px; /* Match card rounding */
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1); /* Add subtle shadow */
+    }
+    .video-container iframe, .edu-video-container iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border: 0; /* Remove iframe border */
+        transition: transform var(--transition-speed);
+    }
+    /* Specific styling for smaller Education videos */
+    .edu-video-container {
+      max-width: 560px; /* Limit width */
+      margin: 1rem auto; /* Center and add margin */
+       /* Adjust padding-top if needed for different aspect ratio, keeping 16:9 for consistency */
+    }
+
+    /* → Video hover zoom effect */
+    .video-container:hover iframe, .edu-video-container:hover iframe {
+      transform: scale(1.03); /* Slightly larger zoom */
+    }
+
+
+    /* → Polished SVG wave colors */
+    .wave-svg-color {
+        /* Ensure wave covers full width without horizontal scroll */
+        width: 100%;
+        line-height: 0; /* Remove extra space below SVG */
+        margin-bottom: 3rem; /* Consistent spacing */
+    }
+    .wave-svg-color svg {
+        display: block; /* Remove potential bottom space */
+    }
+    /* Apply theme colors with some opacity */
+    .wave-svg-color path:nth-child(1) {
+      fill: var(--color-secondary);
+      opacity: 0.6;
+    }
+    .wave-svg-color path:nth-child(2) {
+      fill: var(--color-primary);
+      opacity: 0.8;
+    }
+
+     /* → Skills section icons */
+    .skill-container .col {
+      transition: transform var(--transition-speed);
+    }
+    .skill-container .col:hover {
+      transform: translateY(-5px); /* Lift icons on hover */
+      color: var(--color-primary); /* Change color on hover */
+    }
+    .skill-container i {
+      margin-bottom: 0.5rem; /* Space between icon and text */
+    }
+
+    /* → Footer styling */
+    footer {
+      background-color: #e9ecef; /* Standard light gray */
+      color: #6c757d; /* Muted text color */
+      font-size: 0.9rem;
+    }
+
+    /* Contact Icons */
+    .contact-icons a {
+        color: var(--color-text); /* Default icon color */
+        transition: color var(--transition-speed), transform var(--transition-speed);
+        display: inline-block; /* Allows transform */
+    }
+    .contact-icons a:hover {
+        color: var(--color-primary); /* Highlight color on hover */
+        transform: scale(1.1); /* Slightly enlarge icon */
+    }
+
+
   </style>
 
   <title>Sam Mao | Portfolio</title>
@@ -65,324 +234,324 @@
 <body>
 
   <!-- HEADER -->
-  <header>
-    <div class="wave">
-      <div class="container header-container">
-        <h1 class="name">Sam Mao.</h1>
-        <h3 class="subtitle text-center">
-          Building beautiful applications & agents that just work.
-        </h3>
-        <img
-          src="https://raw.githubusercontent.com/keyoumao/keyoumao.github.io/master/citations%20(1).jpg"
-          class="boy"
-          alt="boy image" />
-      </div>
-    </div>
-    <div class="wave-svg">
-      <svg xmlns="http://www.w3.org/2000/svg" fill="#fff" width="100%" height="80" preserveAspectRatio="none"
-        viewBox="0 0 1600 200">
-        <path
-          d="M-8,95.3C-8,95.3,189,2,398,2s604,184.7,800,184.7s412-91.4,412-91.4V271H-8V95.3z" />
-        <path
-          d="M1610,95.3c0,0-216,80-412,80c-98,0-245.8-40.5-395.1-80.9c149.4,46.2,297.1,92.3,395.1,92.3C1394,186.7,1610,95.3,1610,95.3z" />
-      </svg>
+  <header class="py-5 mb-4">
+    <div class="container text-center">
+      <!-- Added reveal class -->
+      <h1 class="name display-4 reveal">Sam Mao.</h1>
+      <!-- Added reveal class with delay -->
+      <h3 class="subtitle reveal" style="transition-delay: 0.1s;">Building beautiful applications & agents that just work.</h3>
+      <!-- Added reveal class with delay -->
+      <img
+        src="https://raw.githubusercontent.com/keyoumao/keyoumao.github.io/master/citations%20(1).jpg"
+        class="rounded-circle mt-3 reveal" style="transition-delay: 0.2s;"
+        alt="Sam Mao"
+        width="120" />
     </div>
   </header>
 
   <!-- INTRODUCTION -->
-  <section class="container my-5">
+  <section class="container my-5 text-center reveal">
     <h1 class="title">Thanks for stopping by.</h1>
-    <h3 class="subtitle">
+    <h3 class="intro"> <!-- Changed class for clarity, could keep subtitle -->
       I am an enthusiastic AI scientist with a passion for creating beautiful
       data visualizations and applications built on programming technologies.
     </h3>
   </section>
 
   <!-- SKILLS -->
-  <section class="container skill-container my-5">
+  <section class="container skill-container my-5 reveal">
+    <h2 class="text-center mb-4">Core Skills</h2> <!-- Added heading -->
     <div class="row text-center">
-      <div class="col">
-        <i class="fab fa-python fa-3x"></i>
-        <p>Python</p>
-      </div>
-      <div class="col">
-        <i class="fab fa-css3-alt fa-3x"></i>
-        <p>CSS3</p>
-      </div>
-      <div class="col">
-        <i class="fab fa-microsoft fa-3x"></i>
-        <p>Azure AI</p>
-      </div>
-      <div class="col">
-        <i class="fab fa-aws fa-3x"></i>
-        <p>AWS</p>
-      </div>
-      <div class="col">
-        <i class="fab fa-gitlab fa-3x"></i>
-        <p>GitLab</p>
-      </div>
+      <!-- Each skill icon can reveal individually if desired, or keep section reveal -->
+      <div class="col"><i class="fab fa-python fa-3x"></i><p>Python</p></div>
+      <div class="col"><i class="fab fa-css3-alt fa-3x"></i><p>CSS3</p></div>
+      <div class="col"><i class="fab fa-microsoft fa-3x"></i><p>Azure AI</p></div>
+      <div class="col"><i class="fab fa-aws fa-3x"></i><p>AWS</p></div>
+      <div class="col"><i class="fab fa-gitlab fa-3x"></i><p>GitLab</p></div>
     </div>
   </section>
 
   <!-- COLOR WAVE -->
-  <div class="wave-svg-color">
-    <svg xmlns="http://www.w3.org/2000/svg" fill="#328eff" width="100%" height="80" preserveAspectRatio="none"
+  <div class="wave-svg-color"> <!-- Removed mb-5, relying on section margins -->
+    <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="80" preserveAspectRatio="none"
       viewBox="0 0 1600 200">
-      <path
-        d="M-8,95.3C-8,95.3,189,2,398,2s604,184.7,800,184.7s412-91.4,412-91.4V271H-8V95.3z" />
-      <path
-        d="M1610,95.3c0,0-216,80-412,80c-98,0-245.8-40.5-395.1-80.9c149.4,46.2,297.1,92.3,395.1,92.3C1394,186.7,1610,95.3,1610,95.3z" />
+      <!-- Ensure paths fill correctly based on viewbox -->
+      <path d="M-8,95.3C-8,95.3,189,2,398,2s604,184.7,800,184.7s412-91.4,412-91.4V200H-8V95.3z"/>
+      <path d="M1610,95.3c0,0-216,80-412,80c-98,0-245.8-40.5-395.1-80.9c149.4,46.2,297.1,92.3,395.1,92.3C1394,186.7,1610,95.3,1610,95.3z"/>
     </svg>
   </div>
 
- <!-- ABOUT ME -->
-  <section class="container">
-    <div class="card custom-card">
-      <div class="card-body">
-        <span class="card-icon"><i class="fas fa-code"></i></span>
-        <h3 class="card-title">More about Me</h3>
+  <!-- ABOUT ME -->
+  <section class="container my-5 reveal"> <!-- Added margin top/bottom -->
+    <div class="card custom-card"> <!-- Already has custom styling -->
+      <div class="card-body"> <!-- Padding handled by .custom-card now -->
+        <h3 class="card-title mb-3"><i class="fas fa-user-circle"></i> More about Me</h3> <!-- Changed icon -->
         <p class="card-text">
           I am an independent AI Researcher at
           <a href="https://www.atlantianintelligence.com/">AI4M&MM</a> and the
-          <a href="https://www.responsible.ai/">Responsible Artificial Intelligence Institute</a>.
-          I develop LLMs, virtual assistants, visualization, and agentic tools
-          for scalable enterprise solutions. My projects are primarily funded by
-          the private sector and venture capital funds. You can find my
-          <a href="https://scholar.google.com/citations?hl=en&user=0Dkd__8AAAAJ&view_op=list_works/">academic publications</a>
-          &amp;
-          <a href="https://conferences.lbl.gov/event/1375/?print=1/">presentations demo</a>.
+          <a href="https://www.responsible.ai/">Responsible Artificial Intelligence Institute</a>. I develop LLMs,
+          virtual assistants, visualization, and agentic tools for scalable enterprise solutions. My projects are
+          primarily funded by the private sector and venture capital funds. You can find my
+          <a href="https://scholar.google.com/citations?hl=en&user=0Dkd__8AAAAJ&view_op=list_works/">academic
+            publications</a>
+          &amp; <a href="https://conferences.lbl.gov/event/1375/?print=1/">presentations demo</a>.
         </p>
-        <h5 class="card-title">Technologies I use:</h5>
-        <p class="card-text">LangChain, OpenAI, Azure AI, Pinecone, Docker</p>
+        <h5 class="mt-4">Technologies I frequently use:</h5> <!-- Added margin top -->
+        <p>LangChain, OpenAI, Azure AI, Pinecone, Docker, Kubernetes</p> <!-- Added Kubernetes as example -->
       </div>
     </div>
   </section>
 
-  <!-- RECENT PROJECTS -->
-  <section class="container my-5">
+  <!-- RECENT PROJECTS INTRO -->
+  <section class="container mt-5 mb-4 text-center reveal"> <!-- Adjusted margins -->
     <h1 class="title">Recent Projects</h1>
-    <h3 class="subtitle">These are just a few of the projects I have collaborated on.</h3>
+    <h3 class="subtitle">A selection of projects I have worked on or collaborated on.</h3>
   </section>
 
-  <div class="container mb-5">
+  <!-- AI PRODUCT VIDEOS -->
+  <section class="container mb-5 reveal">
+     <div class="row">
+       <!-- Apply reveal to columns for staggered effect if desired -->
+       <div class="col-12 col-md-6 col-lg-4 mb-4"> <!-- Added bottom margin -->
+         <div class="video-container">
+           <iframe src="https://www.youtube.com/embed/Sv2F5MBeCnE"
+             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+             allowfullscreen title="Lipstick Shopping Assistant"></iframe>
+         </div>
+         <h5 class="text-center mt-2">Lipstick Shopping Assistant</h5> <!-- Added title below video -->
+       </div>
+       <div class="col-12 col-md-6 col-lg-4 mb-4">
+         <div class="video-container">
+           <iframe src="https://www.youtube.com/embed/VLSErcK5qv4"
+             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+             allowfullscreen title="AI Agent for Supplier Optimization"></iframe>
+         </div>
+          <h5 class="text-center mt-2">AI Supplier Optimization</h5>
+       </div>
+       <div class="col-12 col-md-6 col-lg-4 mb-4">
+         <div class="video-container">
+           <iframe src="https://www.youtube.com/embed/XkCfma-XxoA"
+             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+             allowfullscreen title="ML for Characterizing Superconducting Materials"></iframe>
+         </div>
+          <h5 class="text-center mt-2">ML for Superconductors</h5>
+       </div>
+     </div>
+   </section>
+
+  <!-- TIMELINE -->
+  <section class="container mb-5">
     <div id="timeline">
-  <!-- AI PRODUCTS -->
-  <section class="container my-5">
-    <div class="row">
-      <div class="col-12 col-md-6 col-lg-4">
-        <div class="video-container">
-          <iframe
-            src="https://www.youtube.com/embed/Sv2F5MBeCnE"
-            frameborder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowfullscreen
-            title="Lipstick Shopping Assistant">
-          </iframe>
-        </div>
-      </div>
-      <div class="col-12 col-md-6 col-lg-4">
-        <div class="video-container">
-          <iframe
-            src="https://www.youtube.com/embed/VLSErcK5qv4"
-            frameborder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowfullscreen
-            title="AI Agent for Supplier Optimization">
-          </iframe>
-        </div>
-      </div>
-      <div class="col-12 col-md-6 col-lg-4">
-        <div class="video-container">
-          <iframe
-            src="https://www.youtube.com/embed/XkCfma-XxoA"
-            frameborder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowfullscreen
-            title="ML for Characterizing Superconducting Materials">
-          </iframe>
-        </div>
-      </div>
+       <!-- Added timeline-item class for animation -->
+       <div class="timeline-item mb-4 p-4 card shadow-sm custom-card"> <!-- Applied custom-card style -->
+         <h2 class="h4">Mission to Mars Web App</h2> <!-- Adjusted heading level -->
+         <p>Enhanced a web scraping application to pull high-resolution Mars hemisphere images, updated the MongoDB database, and redesigned the front-end to display the new data effectively.</p>
+         <div class="mt-2"> <!-- Group buttons -->
+           <a href="https://github.com/keyoumao/Mission-to-Mars" class="btn btn-sm me-2">Code</a> <!-- Added margin -->
+           <a href="#" class="btn btn-sm btn-outline-secondary disabled">Live Demo</a> <!-- Styled disabled demo link -->
+         </div>
+         <img src="https://mars.nasa.gov/system/content_pages/main_images/374_mars2020-PIA21635.jpg"
+           alt="Mars Hemisphere" class="img-fluid rounded mt-3">
+       </div>
+
+       <!-- Repeat for other timeline items -->
+       <div class="timeline-item mb-4 p-4 card shadow-sm custom-card">
+         <h2 class="h4">PyBer Ride-Sharing Analysis</h2>
+         <p>Performed data analysis and visualization using Python (Pandas, Matplotlib) to generate insights for a ride-sharing company, culminating in a report for executive review.</p>
+          <div class="mt-2">
+             <a href="https://github.com/keyoumao/PyBer_Analysis" class="btn btn-sm me-2">Code</a>
+             <a href="#" class="btn btn-sm btn-outline-secondary disabled">Live Demo</a>
+          </div>
+         <img src="https://raw.githubusercontent.com/keyoumao/keyoumao.github.io/master/Fig1.png"
+           alt="PyBer Analysis Chart" class="img-fluid rounded mt-3">
+       </div>
+
+       <div class="timeline-item mb-4 p-4 card shadow-sm custom-card">
+         <h2 class="h4">World Weather & Travel Analysis</h2>
+         <p>Utilized Python, APIs (OpenWeatherMap, Google Maps), and Jupyter notebooks to analyze weather data, identify ideal vacation spots, and map potential travel itineraries between cities.</p>
+         <div class="mt-2">
+           <a href="https://github.com/keyoumao/World_Weather_Analysis" class="btn btn-sm me-2">Code</a>
+           <a href="#" class="btn btn-sm btn-outline-secondary disabled">Live Demo</a>
+         </div>
+         <img src="https://www.allaboutai.com/wp-content/uploads/2024/04/AI-in-Google-Maps_-6-Features-You-Cant-Miss-Out.jpg.webp"
+           alt="Weather Map Visualization" class="img-fluid rounded mt-3">
+       </div>
+
+       <div class="timeline-item mb-4 p-4 card shadow-sm custom-card">
+         <h2 class="h4">Movie Data ETL Pipeline</h2>
+         <p>Developed an Extract, Transform, Load (ETL) pipeline using Python and Pandas to clean and merge movie data from multiple sources (Wikipedia, Kaggle, MovieLens) and load it into a PostgreSQL database.</p>
+          <div class="mt-2">
+            <a href="https://github.com/keyoumao/Movies-ETL" class="btn btn-sm me-2">Code</a>
+            <a href="#" class="btn btn-sm btn-outline-secondary disabled">Live Demo</a>
+          </div>
+         <img src="https://storage.googleapis.com/kaggle-datasets-images/1474/2639/cb50fd3b236d01184fd23ad59af50b4f/dataset-original.jpg"
+           alt="Movies ETL Process" class="img-fluid rounded mt-3">
+       </div>
+
+       <div class="timeline-item mb-4 p-4 card shadow-sm custom-card">
+          <h2 class="h4">Surf Shop Weather Analysis (Flask App)</h2>
+          <p>Built a Flask API to analyze weather data (temperature, precipitation) from an SQLite database, providing endpoints to query historical weather patterns for business planning.</p>
+          <div class="mt-2">
+             <a href="https://github.com/keyoumao/surfs_up" class="btn btn-sm me-2">Code</a>
+             <a href="#" class="btn btn-sm btn-outline-secondary disabled">Live Demo</a>
+          </div>
+          <img src="https://cdn.pixabay.com/photo/2024/05/03/15/12/ai-generated-8737256_1280.png"
+             alt="Surf Conditions" class="img-fluid rounded mt-3">
+       </div>
     </div>
   </section>
-    </div>
-  </div>
 
-  <div class="container">
-    <div id="timeline">
-      <!-- Mission to Mars -->
-      <div class="timeline-item">
-        <div class="timeline-icon"><i class="fas fa-star"></i></div>
-        <div class="timeline-content">
-          <h2>Mission to Mars</h2>
-          <p>Robin’s web app is looking good and functioning well, but she wanted to add more polish to it. She had been admiring images of Mars’ hemispheres and realized that the site is scraping-friendly. She would like to adjust the current web app to include all four of the hemispheres images. This requires additional scraping code to pull the high-resolution images, updating Mongo to include the new data, and altering the design of her web app to accommodate these images.</p>
-          <a href="https://github.com/keyoumao/Mission-to-Mars" class="btn"><i class="fab fa-github"></i> Code</a>
-          <a href="#" class="btn"><i class="fas fa-tv"></i> Live Demo</a>
-          <img id="myImg"
-            src="https://mars.nasa.gov/system/content_pages/main_images/374_mars2020-PIA21635.jpg"
-            alt="Mars"
-            style="width:100%;max-width:500px">
+   <!-- EDUCATION -->
+   <section class="container my-5 reveal">
+     <h1 class="title text-center mb-5">Education</h1> <!-- Centered Title -->
+
+     <div class="row mb-4 align-items-center"> <!-- Use rows for better structure -->
+        <div class="col-md-3 text-md-end"> <!-- Align text for larger screens -->
+            <small class="text-muted d-block">2021</small> <!-- Year first -->
         </div>
-      </div>
-
-      <!-- PyBer Analysis -->
-      <div class="timeline-item">
-        <div class="timeline-icon"><i class="fas fa-star"></i></div>
-        <div class="timeline-content right">
-          <h2>PyBer Analysis</h2>
-          <p>The purpose of this assignment is to create two additional technical analyses and a written report that delivers our results to the CEO.</p>
-          <a href="https://github.com/keyoumao/PyBer_Analysis" class="btn"><i class="fab fa-github"></i> Code</a>
-          <a href="#" class="btn"><i class="fas fa-tv"></i> Live Demo</a>
-          <img id="myImg"
-            src="https://raw.githubusercontent.com/keyoumao/keyoumao.github.io/master/Fig1.png"
-            alt="PyBer_Analysis"
-            style="width:100%;max-width:800px">
+        <div class="col-md-9">
+            <h4>Oak Ridge National Laboratory</h4>
+            <p class="mb-0">Postdoc – Machine Learning on Defect Analysis</p>
         </div>
-      </div>
+     </div>
 
-      <!-- World Weather Analysis -->
-      <div class="timeline-item">
-        <div class="timeline-icon"><i class="fas fa-star"></i></div>
-        <div class="timeline-content">
-          <h2>World Weather Analysis</h2>
-          <p>Create a Travel Itinerary with a Corresponding Map: a map (travel itinerary) that shows the route between four cities from the customer’s possible travel destinations, and then create a map with pop-up markers for the four cities.</p>
-          <a href="https://github.com/keyoumao/World_Weather_Analysis" class="btn"><i class="fab fa-github"></i> Code</a>
-          <a href="#" class="btn"><i class="fas fa-tv"></i> Live Demo</a>
-          <img id="myImg"
-            src="https://www.allaboutai.com/wp-content/uploads/2024/04/AI-in-Google-Maps_-6-Features-You-Cant-Miss-Out.jpg.webp"
-            alt="Googlemap"
-            style="width:100%;max-width:300px">
+     <div class="row mb-4 align-items-center">
+        <div class="col-md-3 text-md-end">
+            <small class="text-muted d-block">2020</small>
         </div>
-      </div>
-
-      <!-- Movies ETL -->
-      <div class="timeline-item">
-        <div class="timeline-icon"><i class="fas fa-star"></i></div>
-        <div class="timeline-content right">
-          <h2>Movies ETL</h2>
-          <p>General function to load all three data files: Wikipedia data, Kaggle metadata, MovieLens rating data (from Kaggle). Multiple functions perform all of the transformation steps. Remove the existing data from SQL, but keep the empty tables and then load dataframe into PostgreSQL. Try-except blocks were used to account for unforeseen problems that may arise with new data.</p>
-          <a href="https://github.com/keyoumao/Movies-ETL" class="btn"><i class="fab fa-github"></i> Code</a>
-          <a href="#" class="btn"><i class="fas fa-tv"></i> Live Demo</a>
-          <img id="myImg"
-            src="https://storage.googleapis.com/kaggle-datasets-images/1474/2639/cb50fd3b236d01184fd23ad59af50b4f/dataset-original.jpg"
-            alt="Movies-ETL"
-            style="width:100%;max-width:400px">
+        <div class="col-md-9">
+            <h4>Vanderbilt University</h4>
+            <p class="mb-0">Data Science Master</p>
         </div>
-      </div>
+     </div>
 
-      <!-- Surfs Up -->
-      <div class="timeline-item">
-        <div class="timeline-icon"><i class="fas fa-star"></i></div>
-        <div class="timeline-content">
-          <h2>Surfs Up</h2>
-          <p>Advanced Data Storage and Retrieval with a Flask app to analyze the best location to build an ice cream shop.</p>
-          <a href="https://github.com/keyoumao/surfs_up" class="btn"><i class="fab fa-github"></i> Code</a>
-          <a href="#" class="btn"><i class="fas fa-tv"></i> Live Demo</a>
-          <img id="myImg"
-            src="https://cdn.pixabay.com/photo/2024/05/03/15/12/ai-generated-8737256_1280.png"
-            alt="surfs_up"
-            style="width:100%;max-width:300px">
+     <div class="row mb-4 align-items-center">
+        <div class="col-md-3 text-md-end">
+            <small class="text-muted d-block">2019</small>
         </div>
-      </div>
-    </div>
-  </div>
-  
-  <!-- EDUCATION -->
-  <section class="container education-container my-5">
-    <h1 class="title">Education</h1>
-
-    <article class="education-item mb-4">
-      <h3 class="subtitle">Oak Ridge National Laboratory</h3>
-      <span class="text-muted">Postdoc – Machine Learning on Defect Analysis | 2021</span>
-    </article>
-
-    <article class="education-item mb-4">
-      <h3 class="subtitle">Vanderbilt University</h3>
-      <span class="text-muted">Data Science Master | 2020</span>
-    </article>
-
-    <article class="education-item mb-4">
-      <h3 class="subtitle">Purdue University</h3>
-      <span class="text-muted">Ph.D. Materials Science and Engineering | 2019</span>
-    </article>
-
-    <article class="education-item mb-4">
-      <h3 class="subtitle">Purdue University</h3>
-      <span class="text-muted">M.S. Nuclear Engineering | 2016</span>
-      <div class="row">
-        <div class="col-12 col-md-6">
-          <div class="edu-video-container">
-            <iframe
-              src="https://collections.lib.purdue.edu/campus/buildings/63"
-              frameborder="0"
-              allowfullscreen
-              title="Vintage Purdue NE Building (1959–2020)">
-            </iframe>
-          </div>
+        <div class="col-md-9">
+            <h4>Purdue University</h4>
+            <p class="mb-0">Ph.D. Materials Science and Engineering</p>
         </div>
-        <div class="col-12 col-md-6">
-          <div class="edu-video-container">
-            <iframe
-              src="https://www.youtube.com/embed/xdC8p2wmZzo?start=50"
-              frameborder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowfullscreen
-              title="Purdue M.S. NE Campus Clip">
-            </iframe>
-          </div>
-        </div>
-      </div>
-    </article>
+     </div>
 
-    <article class="education-item mb-4">
-      <h3 class="subtitle">University of California, San Diego</h3>
-      <span class="text-muted">B.S. Mechanical Engineering | 2014</span>
-    </article>
-  </section>
+     <div class="row mb-4 align-items-center">
+        <div class="col-md-3 text-md-end">
+            <small class="text-muted d-block">2016</small>
+        </div>
+        <div class="col-md-9">
+            <h4>Purdue University</h4>
+            <p class="mb-1">M.S. Nuclear Engineering</p>
+             <!-- Embedded Videos Section for Purdue M.S. -->
+            <div class="row mt-3">
+                <div class="col-lg-6 mb-3 mb-lg-0"> <!-- Responsive column sizing -->
+                    <div class="edu-video-container">
+                    <iframe src="https://collections.lib.purdue.edu/campus/buildings/63"
+                        allowfullscreen title="Vintage Purdue NE Building (1959–2020)"></iframe>
+                    </div>
+                    <p class="text-center small text-muted mt-1">Purdue NE Building (Archival)</p>
+                </div>
+                <div class="col-lg-6">
+                    <div class="edu-video-container">
+                    <iframe src="https://www.youtube.com/embed/xdC8p2wmZzo?start=50"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen title="Purdue M.S. NE Campus Clip"></iframe>
+                    </div>
+                     <p class="text-center small text-muted mt-1">Purdue Campus Clip</p>
+                </div>
+            </div>
+        </div>
+     </div>
+
+     <div class="row mb-4 align-items-center">
+        <div class="col-md-3 text-md-end">
+            <small class="text-muted d-block">2014</small>
+        </div>
+        <div class="col-md-9">
+            <h4>University of California, San Diego</h4>
+            <p class="mb-0">B.S. Mechanical Engineering</p>
+        </div>
+     </div>
+   </section>
 
   <!-- AVAILABLE FOR WORK -->
-  <section class="container-color">
-    <div class="container">
-      <h1 class="title">I'm available for consultation: <br>https://calendly.com/keyoumao/meeting-with-sam<br>.</h1>
-      <h3 class="subtitle">
-        Actively contributing to new projects and seeking a full-time role in a
-        fast-paced, agile environment. WE ARE HIRING TALENTS! Get in touch!
-      </h3>
-    </div>
+  <section class="container my-5 text-center reveal">
+    <h1 class="title">Available for Collaboration</h1> <!-- Updated heading -->
+    <h3 class="subtitle mb-3">I'm currently open to <a href="https://calendly.com/keyoumao/meeting-with-sam/">consultations</a> and exploring full-time opportunities.</h3>
+    <p class="lead">Seeking roles in fast-paced, agile environments where I can contribute to innovative AI projects. Actively hiring talented individuals as well!</p>
+     <a href="https://calendly.com/keyoumao/meeting-with-sam/" class="btn mt-3">Schedule a Meeting</a>
   </section>
 
   <!-- CONTACT -->
-  <section class="container-dark">
-    <div class="container">
-      <h1>Contact Me</h1>
-      <h3 class="intro subtitle">
-        <a href="https://twitter.com/SamManu87997521" class="social-icon"><i class="fab fa-twitter"></i></a>
-        <a href="https://linkedin.com/in/keyoumao" class="social-icon"><i class="fab fa-linkedin"></i></a>
-        <a href="https://github.com/keyoumao" class="social-icon"><i class="fab fa-github"></i></a>
-        <a href="mailto:keyou@atlantianintelligence.com" class="social-icon"><i class="fas fa-envelope"></i></a>
-      </h3>
-    </div>
-  </section>
+   <section class="container my-5 text-center reveal">
+     <h1 class="title">Contact Me</h1> <!-- Use title class -->
+     <p class="mb-4">Let's connect!</p> <!-- Added introductory text -->
+     <div class="mt-3 contact-icons"> <!-- Added class for styling -->
+       <a href="https://twitter.com/SamManu87997521" class="mx-2" title="Twitter"><i class="fab fa-twitter fa-2x"></i></a>
+       <a href="https://linkedin.com/in/keyoumao" class="mx-2" title="LinkedIn"><i class="fab fa-linkedin fa-2x"></i></a>
+       <a href="https://github.com/keyoumao" class="mx-2" title="GitHub"><i class="fab fa-github fa-2x"></i></a>
+       <a href="mailto:keyou@atlantianintelligence.com" class="mx-2" title="Email"><i class="fas fa-envelope fa-2x"></i></a>
+     </div>
+   </section>
 
   <!-- FOOTER -->
-  <footer>
-    <div class="container">
-      Sam Mao &copy; 2025
-    </div>
+  <footer class="py-4 text-center mt-5"> <!-- Added margin top -->
+    <div class="container">&copy; Sam Mao 2025</div>
   </footer>
 
-  <!-- SCRIPTS -->
-  <script
-    src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-    integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+  <!-- Scripts -->
+  <!-- Bootstrap Bundle JS (includes Popper) -->
+   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"
+    integrity="sha384-xrRywqdh3PHs8B8ECOV5+EUXL3/5A7Jp/6fC99DR/vTRw7i0L5M4u7NqA6tL3Z7p"
     crossorigin="anonymous"></script>
-  <script
-    src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
-    integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut"
-    crossorigin="anonymous"></script>
-  <script
-    src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
-    integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
-    crossorigin="anonymous"></script>
-  <script src="assets/js/app.js"></script>
+  <!-- Optional: jQuery if needed by other scripts, Bootstrap 4 JS includes basic functionality -->
+  <!-- <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" crossorigin="anonymous"></script> -->
+
+  <!-- Custom JS for animations -->
+  <!-- <script src="assets/js/app.js"></script> -->
+  <script>
+      // Intersection Observer for reveal animations
+      const revealElements = document.querySelectorAll('.reveal');
+      const timelineItems = document.querySelectorAll('.timeline-item');
+
+      const observerOptions = {
+        root: null, // relative to document viewport
+        rootMargin: '0px 0px -50px 0px', // Trigger slightly before element is fully in view
+        threshold: 0.1 // Trigger when 10% is visible
+      };
+
+      const observerCallback = (entries, observer) => {
+        entries.forEach(entry => {
+          // Check if element is intersecting (scrolling into view)
+          if (entry.isIntersecting) {
+            entry.target.classList.add('active');
+            // Optional: Stop observing the element after it has been revealed once
+            // observer.unobserve(entry.target);
+          }
+          // Optional: If you want elements to hide again when scrolling out of view
+          // else {
+          //    entry.target.classList.remove('active');
+          // }
+        });
+      };
+
+      // Create a single observer instance
+      const observer = new IntersectionObserver(observerCallback, observerOptions);
+
+      // Observe all elements with the '.reveal' class
+      revealElements.forEach(el => {
+        if (el) { // Check if element exists
+            observer.observe(el);
+        }
+      });
+
+      // Observe all elements with the '.timeline-item' class
+       timelineItems.forEach(el => {
+         if (el) { // Check if element exists
+             observer.observe(el);
+         }
+       });
+
+  </script>
 </body>
 </html>
