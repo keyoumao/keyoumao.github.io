@@ -34,12 +34,15 @@
       width: 100%;
       max-width: 560px;
       margin: 1rem auto;
-      padding-top: 56.25%; /* 16:9 aspect ratio */
+      /* original 16:9 padding-top was 56.25%; halve the height: */
+      padding-top: 28.125%;
     }
     .video-container iframe {
       position: absolute;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
     }
   </style>
 
@@ -291,12 +294,24 @@
     <article class="education-item">
       <h3 class="subtitle">Purdue University</h3>
       <span class="text-muted">M.S. Nuclear Engineering | 2016</span>
+
+      <!-- Vintage Purdue NE building -->
       <div class="video-container">
         <iframe
           src="https://collections.lib.purdue.edu/campus/buildings/63"
           frameborder="0"
           allowfullscreen
           title="Vintage Purdue Nuclear Engineering Building (1959–2020)">
+        </iframe>
+      </div>
+      <!-- Purdue NE YouTube clip at 50s -->
+      <div class="video-container">
+        <iframe
+          src="https://www.youtube.com/embed/xdC8p2wmZzo?start=50"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen
+          title="Purdue M.S. Nuclear Engineering Campus Clip">
         </iframe>
       </div>
     </article>
@@ -353,6 +368,5 @@
     integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
     crossorigin="anonymous"></script>
   <script src="assets/js/app.js"></script>
-
 </body>
 </html>
